@@ -1,0 +1,66 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/postgres
+{
+	"name": "Python 3 & PostgreSQL",
+	"dockerComposeFile": "compose.yaml",
+	"service": "app",
+	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	"features": {
+		"ghcr.io/dhoeric/features/hadolint:1": {},
+		"ghcr.io/lukewiwa/features/shellcheck:0": {}
+	},
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// This can be used to network with other containers or the host.
+	// "forwardPorts": [5000, 5432],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	// "postCreateCommand": "pip install --user -r requirements.txt",
+
+	// Configure tool-specific properties.
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"timonwong.shellcheck",
+				"exiasr.hadolint",
+				"ms-azuretools.vscode-docker",
+				"GitHub.copilot",
+				"GitHub.vscode-github-actions",
+				"donjayamanne.githistory",
+				"ms-python.python",
+				"ms-python.autopep8",
+				"njpwerner.autodocstring",
+				"ms-python.vscode-pylance",
+				"ms-python.isort",
+				"Gruntfuggly.todo-tree",
+				"yzhang.markdown-all-in-one",
+				"usernamehw.errorlens"
+			],
+			"settings": {
+				"hadolint.cliOptions": ["--no-color"],
+				"hadolint.hadolintPath": "/usr/local/bin/hadolint",
+				"python.languageServer": "Pylance",
+				"python.analysis.diagnosticMode": "workspace",
+				"python.analysis.typeCheckingMode": "basic",
+				"python.linting.lintOnSave": true,
+				"python.linting.pylintEnabled": false,
+				"python.linting.flake8Enabled": true,
+				"python.formatting.provider": "autopep8",
+				"autoDocstring.docstringFormat": "google",
+				"editor.formatOnSave": true,
+				"editor.codeActionsOnSave": {
+					"source.organizeImports": true
+				},
+				"editor.rulers": [
+					150
+				],
+				"files.insertFinalNewline": true
+			}
+		}
+	}
+
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+}
