@@ -15,6 +15,6 @@ export AWS_SECRET_ACCESS_KEY="xxx"
 export AWS_SESSION_TOKEN="xxx"
 
 aws --region ap-northeast-1 ecr get-login-password | docker login --username AWS --password-stdin 428485887053.dkr.ecr.ap-northeast-1.amazonaws.com
-docker tag fast-api-expt:latest 428485887053.dkr.ecr.ap-northeast-1.amazonaws.com/stg-terraform-expt-backend:latest
-docker push 428485887053.dkr.ecr.ap-northeast-1.amazonaws.com/stg-terraform-expt-backend:latest
+docker tag fast-api-expt:latest 428485887053.dkr.ecr.ap-northeast-1.amazonaws.com/stg-terraform-expt:latest
+docker push 428485887053.dkr.ecr.ap-northeast-1.amazonaws.com/stg-terraform-expt:latest
 ```
