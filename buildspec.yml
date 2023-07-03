@@ -1,6 +1,7 @@
 version: 0.2
 
 env:
+  # Secrets Managerは有料だから、 Parameter Storeでも良いと思う。
   secrets-manager:
     DOCKERHUB_USER: arn:aws:secretsmanager:$AWS_DEFAULT_REGION:$AWS_ACCOUNT_ID:secret:stg/terraform-expt-build:username
     DOCKERHUB_PASS: arn:aws:secretsmanager:$AWS_DEFAULT_REGION:$AWS_ACCOUNT_ID:secret:stg/terraform-expt-build:password
@@ -11,7 +12,7 @@ phases:
       - echo Logging in to Amazon ECR...
       - aws --region $AWS_DEFAULT_REGION ecr get-login-password | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
       - echo Logging in to Docker Hub...
-      # TODO: Docker Hubのダウンロード回数制限を回避するために認証する。ただ、AWSの公式ドキュメントには記載がないので不要かもしれない。
+      # Docker Hubのダウンロード回数制限を回避するために認証する。
       - echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin
       - IMAGE_TAG=$CODEBUILD_RESOLVED_SOURCE_VERSION
   build:
