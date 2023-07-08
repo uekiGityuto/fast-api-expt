@@ -19,7 +19,7 @@
 	// "forwardPorts": [5000, 5432],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "pip install --user -r requirements.txt",
+	"postCreateCommand": ".devcontainer/postCreateCommand.sh",
 
 	// Configure tool-specific properties.
 	"customizations": {
@@ -39,7 +39,8 @@
 				"ms-python.isort",
 				"Gruntfuggly.todo-tree",
 				"yzhang.markdown-all-in-one",
-				"usernamehw.errorlens"
+				"usernamehw.errorlens",
+				"mikestead.dotenv"
 			],
 			"settings": {
 				"hadolint.cliOptions": ["--no-color"],
@@ -50,15 +51,18 @@
 				"python.linting.lintOnSave": true,
 				"python.linting.pylintEnabled": false,
 				"python.linting.flake8Enabled": true,
-				"python.formatting.provider": "autopep8",
+				"python.linting.flake8Args": [
+					"--max-line-length=150"
+				],
+				"[python]": {
+					"editor.defaultFormatter": "ms-python.autopep8"
+				},
+				"python.formatting.provider": "none",
 				"autoDocstring.docstringFormat": "google",
 				"editor.formatOnSave": true,
 				"editor.codeActionsOnSave": {
 					"source.organizeImports": true
 				},
-				"editor.rulers": [
-					150
-				],
 				"files.insertFinalNewline": true
 			}
 		}
