@@ -93,12 +93,12 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db:
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@app.get("/users/me/", response_model=schemas.User)
-def read_users_me(current_user: models.User = Depends(get_current_active_user)):
+@app.get("/users/me", response_model=schemas.User)
+def read_users_me(current_user: schemas.User = Depends(get_current_active_user)):
     return current_user
 
 
-@app.post("/users/", response_model=schemas.User)
+@app.post("/users", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_email(db, email=user.email)
     if db_user:
@@ -107,26 +107,36 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     return crud.create_user(db=db, user=user)
 
 
-@app.get("/admin/users/", response_model=list[schemas.User])
-def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), _: models.User = Depends(get_current_admin_user)):
+@app.get("/users/item", response_model=schemas.Item)
+def read_own_items(db: Session = Depends(get_db), current_user: schemas.User = Depends(get_current_active_user)):
+    return crud.get_user_items(db=db, user_id=current_user.id)
+
+
+@app.post("/users/item", response_model=schemas.Item)
+def create_items(item: schemas.ItemCreate, db: Session = Depends(get_db), current_user: schemas.User = Depends(get_current_active_user)):
+    return crud.create_user_item(db=db, item=item, user_id=current_user.id)
+
+
+@app.get("/admin/users", response_model=list[schemas.User])
+def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), _: schemas.User = Depends(get_current_admin_user)):
     users = crud.get_users(db, skip=skip, limit=limit)
     return users
 
 
 @app.get("/admin/users/{user_id}", response_model=schemas.User)
-def read_user(user_id: int, db: Session = Depends(get_db), _: models.User = Depends(get_current_admin_user)):
+def read_user(user_id: int, db: Session = Depends(get_db), _: schemas.User = Depends(get_current_admin_user)):
     db_user = crud.get_user(db, user_id=user_id)
     if db_user is None:
         _raise_http_exception(status.HTTP_404_NOT_FOUND, ERROR_USER_NOT_FOUND)
     return db_user
 
 
-@app.post("/admin/users/{user_id}/items/", response_model=schemas.Item)
-def create_item_for_user(user_id: int, item: schemas.ItemCreate, db: Session = Depends(get_db), _: models.User = Depends(get_current_admin_user)):
+@app.post("/admin/users/{user_id}/items", response_model=schemas.Item)
+def create_item_for_user(user_id: int, item: schemas.ItemCreate, db: Session = Depends(get_db), _: schemas.User = Depends(get_current_admin_user)):
     return crud.create_user_item(db=db, item=item, user_id=user_id)
 
 
-@app.get("/admin/items/", response_model=list[schemas.Item])
-def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), _: models.User = Depends(get_current_admin_user)):
+@app.get("/admin/items", response_model=list[schemas.Item])
+def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), _: schemas.User = Depends(get_current_admin_user)):
     items = crud.get_items(db, skip=skip, limit=limit)
     return items
