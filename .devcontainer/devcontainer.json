@@ -29,6 +29,8 @@
 				"exiasr.hadolint",
 				"ms-azuretools.vscode-docker",
 				"GitHub.copilot",
+				"GitHub.copilot-labs",
+				"GitHub.copilot-chat",		
 				"GitHub.vscode-github-actions",
 				"donjayamanne.githistory",
 				"ms-python.python",
