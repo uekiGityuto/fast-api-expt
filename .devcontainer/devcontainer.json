@@ -30,7 +30,7 @@
 				"ms-azuretools.vscode-docker",
 				"GitHub.copilot",
 				"GitHub.copilot-labs",
-				"GitHub.copilot-chat",		
+				"GitHub.copilot-chat",
 				"GitHub.vscode-github-actions",
 				"donjayamanne.githistory",
 				"ms-python.python",
@@ -42,7 +42,8 @@
 				"Gruntfuggly.todo-tree",
 				"yzhang.markdown-all-in-one",
 				"usernamehw.errorlens",
-				"mikestead.dotenv"
+				"mikestead.dotenv",
+				"tommorris.mako"
 			],
 			"settings": {
 				"hadolint.cliOptions": ["--no-color"],
