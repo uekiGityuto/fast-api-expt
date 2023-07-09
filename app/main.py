@@ -7,7 +7,7 @@ from jose import JWTError, jwt
 from sqlalchemy.orm import Session
 
 from app import crud, models, schemas
-from app.database import SessionLocal, engine
+from app.database import engine, get_db
 from app.hash import verify_password
 
 SECRET_KEY = os.environ["SECRET_KEY"]
@@ -26,15 +26,6 @@ ERROR_INVALID_CREDENTIALS = "INVALID_CREDENTIALS"
 ERROR_INACTIVE_USER = "INACTIVE_USER"
 ERROR_USER_ALREADY_EXISTS = "USER_ALREADY_EXISTS"
 ERROR_USER_NOT_FOUND = "USER_NOT_FOUND"
-
-
-# Dependency
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 def _raise_http_exception(status_code: int, detail: str):
