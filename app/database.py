@@ -4,11 +4,11 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-user = os.getenv('PGUSER')
-password = os.getenv('PGPASSWORD')
-server = os.getenv('PGHOST')
-port = os.getenv('PGPORT')
-db = os.getenv('PGDATABASE')
+user = os.environ['PGUSER']
+password = os.environ['PGPASSWORD']
+server = os.environ['PGHOST']
+port = os.environ['PGPORT']
+db = os.environ['PGDATABASE']
 
 SQLALCHEMY_DATABASE_URL = f"postgresql://{user}:{password}@{server}:{port}/{db}"
 

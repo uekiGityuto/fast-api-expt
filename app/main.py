@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timedelta
 
 from fastapi import Depends, FastAPI, HTTPException, status
@@ -10,9 +11,9 @@ from app.database import SessionLocal, engine
 from app.hash import verify_password
 from app.schemas import Token, TokenData, User
 
-SECRET_KEY = "fbdf5c818d8fd00e065bd6da8101479bbb6d0272886181579af24ed89a97a4e7"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+SECRET_KEY = os.environ["SECRET_KEY"]
+ALGORITHM = os.getenv("ALGORITHM", "HS256")
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 30))
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
@@ -33,16 +34,16 @@ def get_db():
 def get_user(db, email: str) -> User:
     db_user = crud.get_user_by_email(db, email=email)
     if db_user is None:
-        raise HTTPException(status_code=403, detail="LOGIN_FAILURE")
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="LOGIN_FAILURE")
     return db_user
 
 
 def authenticate_user(db: Session, email: str, password: str) -> User:
     user = crud.get_user_by_email(db, email=email)
     if user is None:
-        raise HTTPException(status_code=403, detail="LOGIN_FAILURE")
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="LOGIN_FAILURE")
     if not verify_password(password, user.hashed_password):
-        raise HTTPException(status_code=403, detail="LOGIN_FAILURE")
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="LOGIN_FAILURE")
     return user
 
 
@@ -109,7 +110,7 @@ def read_users_me(current_user: User = Depends(get_current_active_user)):
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_email(db, email=user.email)
     if db_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered")
     return crud.create_user(db=db, user=user)
 
 
@@ -123,7 +124,7 @@ def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 def read_user(user_id: int, db: Session = Depends(get_db)):
     db_user = crud.get_user(db, user_id=user_id)
     if db_user is None:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     return db_user
 
 
