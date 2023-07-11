@@ -61,6 +61,9 @@
 					"editor.defaultFormatter": "ms-python.autopep8"
 				},
 				"python.formatting.provider": "none",
+				"python.analysis.ignore": [
+					"alembic/versions/"
+				],
 				"autoDocstring.docstringFormat": "google",
 				"editor.formatOnSave": true,
 				"editor.codeActionsOnSave": {

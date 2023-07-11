@@ -3,8 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.api.dependencies import get_current_admin_user, get_db
 from app.api.errors import ErrorDetail, raise_http_exception
-from app.repositories import user_repo
-from app.repositories import item_repo
+from app.repositories import item_repo, user_repo
 from app.schemas.item import Item, ItemCreate
 from app.schemas.user import User
 
@@ -28,6 +27,15 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
         raise_http_exception(status.HTTP_404_NOT_FOUND,
                              ErrorDetail.USER_NOT_FOUND)
     return db_user
+
+
+@router.delete("/users/{user_id}", response_model=None, status_code=status.HTTP_204_NO_CONTENT)
+def delete_user(user_id: int, db: Session = Depends(get_db)):
+    is_deleted = user_repo.delete_user(db, user_id=user_id)
+    if not is_deleted:
+        raise_http_exception(status.HTTP_404_NOT_FOUND,
+                             ErrorDetail.USER_NOT_FOUND)
+    return status.HTTP_204_NO_CONTENT
 
 
 @router.post("/users/{user_id}/items", response_model=Item)
