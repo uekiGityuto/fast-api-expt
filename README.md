@@ -18,3 +18,9 @@ aws --region ap-northeast-1 ecr get-login-password | docker login --username AWS
 docker tag fast-api-expt:latest 428485887053.dkr.ecr.ap-northeast-1.amazonaws.com/stg-terraform-expt:latest
 docker push 428485887053.dkr.ecr.ap-northeast-1.amazonaws.com/stg-terraform-expt:latest
 ```
+
+## 補足
+
+本当はレイヤーごとに適切な単体テストを実施したいが、今回は省略した。  
+また、テストを意識するとオニオンアーキテクチャで書きたくなる。  
+FastAPIでオニオンアーキテクチャを採用しているサンプルコードはあまり見つからなかったが、[こちら](https://techblog.raksul.com/entry/2023/06/30/142904)が参考になりそう。
