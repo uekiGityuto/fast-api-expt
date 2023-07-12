@@ -23,7 +23,7 @@ class UserRepository:
         db_user = DBUser(
             email=user.email, hashed_password=hashed_password, admin=user.admin)
         self.db.add(db_user)
-        self.db.commit()
+        self.db.flush()
         return db_user
 
     def delete_by_id(self, user_id: int) -> bool:
@@ -32,5 +32,5 @@ class UserRepository:
             return False
         else:
             self.db.delete(user)
-            self.db.commit()
+            self.db.flush()
             return True

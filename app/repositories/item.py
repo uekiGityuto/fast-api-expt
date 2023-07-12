@@ -17,5 +17,5 @@ class ItemRepository:
     def create_for_user(self, item: ItemCreate, user_id: int) -> DBItem:
         db_item = DBItem(**item.dict(), owner_id=user_id)
         self.db.add(db_item)
-        self.db.commit()
+        self.db.flush()
         return db_item

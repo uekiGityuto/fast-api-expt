@@ -12,15 +12,19 @@ from app.schemas.user import User
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 
-def get_db():
-    db = SessionLocal()
+def get_session():
+    session = SessionLocal()
     try:
-        yield db
+        yield session
+        session.commit()
+    except Exception:
+        session.rollback()
+        raise
     finally:
-        db.close()
+        session.close()
 
 
-def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)) -> User:
+def get_current_user(db: Session = Depends(get_session), token: str = Depends(oauth2_scheme)) -> User:
     # TODO: エラーレスポンス周りは改善の余地あり
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,

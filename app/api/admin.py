@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
-from app.api.dependencies import get_current_admin_user, get_db
+from app.api.dependencies import get_current_admin_user, get_session
 from app.api.errors import ErrorDetail, raise_http_exception
 from app.repositories.item import ItemRepository
 from app.repositories.user import UserRepository
@@ -16,14 +16,14 @@ router = APIRouter(
 
 
 @router.get("/users", response_model=list[User])
-def get_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+def get_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_session)):
     user_repo = UserRepository(db)
     users = user_repo.get_all(skip=skip, limit=limit)
     return users
 
 
 @router.get("/users/{user_id}", response_model=User)
-def get_user(user_id: int, db: Session = Depends(get_db)):
+def get_user(user_id: int, db: Session = Depends(get_session)):
     user_repo = UserRepository(db)
     db_user = user_repo.get_by_id(user_id=user_id)
     if db_user is None:
@@ -33,7 +33,7 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
 
 
 @router.delete("/users/{user_id}", response_model=None, status_code=status.HTTP_204_NO_CONTENT)
-def delete_user(user_id: int, db: Session = Depends(get_db)):
+def delete_user(user_id: int, db: Session = Depends(get_session)):
     user_repo = UserRepository(db)
     is_deleted = user_repo.delete_by_id(user_id=user_id)
     if not is_deleted:
@@ -43,13 +43,13 @@ def delete_user(user_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/users/{user_id}/items", response_model=Item)
-def create_item_for_user(user_id: int, item: ItemCreate, db: Session = Depends(get_db)):
+def create_item_for_user(user_id: int, item: ItemCreate, db: Session = Depends(get_session)):
     item_repo = ItemRepository(db)
     return item_repo.create_for_user(item=item, user_id=user_id)
 
 
 @router.get("/items", response_model=list[Item])
-def get_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+def get_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_session)):
     item_repo = ItemRepository(db)
     items = item_repo.get_all(skip=skip, limit=limit)
     return items

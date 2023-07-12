@@ -1,12 +1,14 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
-from app.api.dependencies import get_current_active_user, get_db
-from app.api.errors import ErrorDetail, raise_http_exception
+from app.api.dependencies import get_current_active_user, get_session
+from app.api.errors import handle_error
 from app.repositories.item import ItemRepository
 from app.repositories.user import UserRepository
 from app.schemas.item import Item, ItemCreate
 from app.schemas.user import User, UserCreate
+from app.usecases.user import (CreateItemUseCase, CreateUserUseCase,
+                               GetItemUseCase, TestTxUseCase)
 
 router = APIRouter(
     prefix="/users",
@@ -20,22 +22,50 @@ def get_me(current_user: User = Depends(get_current_active_user)):
 
 
 @router.post("", response_model=User)
-def create_user(user: UserCreate, db: Session = Depends(get_db)):
-    user_repo = UserRepository(db)
-    db_user = user_repo.get_by_email(email=user.email)
-    if db_user:
-        raise_http_exception(status.HTTP_400_BAD_REQUEST,
-                             ErrorDetail.USER_ALREADY_EXISTS)
-    return user_repo.create(user=user)
+def create_user(user: UserCreate, session: Session = Depends(get_session)):
+    user_repo = UserRepository(session)
+    usecase = CreateUserUseCase(user_repo)
+    try:
+        created = usecase.do(user)
+    except Exception as e:
+        handle_error(e)
+    else:
+        return created
+
+
+@router.post("/tx-test", response_model=None, status_code=status.HTTP_201_CREATED)
+def test(session: Session = Depends(get_session)):
+    user_repo = UserRepository(session)
+    usecase = TestTxUseCase(user_repo)
+    user1 = UserCreate(email="test1@example.com", password="password")
+    user2 = UserCreate(email="test2@example.com", password="password")
+    try:
+        created = usecase.do(user1, user2)
+    except Exception as e:
+        handle_error(e)
+    else:
+        return created
 
 
 @router.get("/items", response_model=list[Item])
-def get_own_items(db: Session = Depends(get_db), current_user: User = Depends(get_current_active_user)):
+def get_own_items(db: Session = Depends(get_session), current_user: User = Depends(get_current_active_user)):
     item_repo = ItemRepository(db)
-    return item_repo.get_by_user_id(user_id=current_user.id)
+    usecase = GetItemUseCase(item_repo)
+    try:
+        items = usecase.do(current_user.id)
+    except Exception as e:
+        handle_error(e)
+    else:
+        return items
 
 
 @router.post("/items", response_model=Item)
-def create_own_item(item: ItemCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_active_user)):
+def create_own_item(item: ItemCreate, db: Session = Depends(get_session), current_user: User = Depends(get_current_active_user)):
     item_repo = ItemRepository(db)
-    return item_repo.create_for_user(item=item, user_id=current_user.id)
+    usecase = CreateItemUseCase(item_repo)
+    try:
+        created = usecase.do(item, current_user.id)
+    except Exception as e:
+        handle_error(e)
+    else:
+        return created
