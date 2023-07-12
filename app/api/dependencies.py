@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from app.api.errors import ErrorDetail, raise_http_exception
 from app.core.config import settings
 from app.db.session import SessionLocal
-from app.repositories import user_repo
+from app.repositories.user_repo import UserRepo
 from app.schemas.user import User
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
@@ -35,7 +35,8 @@ def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_
             raise credentials_exception
     except JWTError:
         raise credentials_exception
-    user = user_repo.get_user_by_email(db, email=email)
+    user_repo = UserRepo(db)
+    user = user_repo.get_by_email(email=email)
     if user is None:
         raise credentials_exception
     return user
