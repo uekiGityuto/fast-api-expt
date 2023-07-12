@@ -1,11 +1,12 @@
 from datetime import datetime, timedelta
 
-from jose import jwt
+from jose import JWTError, jwt
 
-from app.core.hash import verify_password
 from app.core.config import settings
+from app.core.hash import verify_password
 from app.models.user import DBUser
 from app.repositories.user import UserRepository
+from app.schemas.user import User
 from app.usecases.errors import DomainException, ErrorDetail
 
 
@@ -27,10 +28,10 @@ class LoginUseCase:
     def _authenticate_user(self, email: str, password: str) -> DBUser:
         user = self.user_repo.get_by_email(email)
         if user is None:
-            raise DomainException(ErrorDetail.AUTHENTICATION_FAILED)
+            raise DomainException(ErrorDetail.LOGIN_FAILED)
         assert user is not None
         if not verify_password(password, user.hashed_password):
-            raise DomainException(ErrorDetail.AUTHENTICATION_FAILED)
+            raise DomainException(ErrorDetail.LOGIN_FAILED)
         return user
 
     def do(self, username: str, password: str) -> str:
@@ -38,3 +39,23 @@ class LoginUseCase:
         access_token_expires = timedelta(
             minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
         return self._create_access_token({"sub": user.email}, access_token_expires)
+
+
+class GetLoginedUseCase:
+    def __init__(self, user_repo: UserRepository):
+        self.user_repo = user_repo
+
+    def do(self, token: str) -> User:
+        e = DomainException(ErrorDetail.INVALID_CREDENTIALS)
+        try:
+            payload = jwt.decode(token, settings.SECRET_KEY,
+                                 algorithms=[settings.ALGORITHM])
+            email = payload.get("sub")
+            if email is None:
+                raise e
+        except JWTError:
+            raise e
+        user = self.user_repo.get_by_email(email=email)
+        if user is None:
+            raise e
+        return user

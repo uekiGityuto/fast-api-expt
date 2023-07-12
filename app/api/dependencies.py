@@ -1,13 +1,13 @@
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
-from jose import JWTError, jwt
 from sqlalchemy.orm import Session
 
-from app.api.errors import ErrorDetail2, raise_http_exception
-from app.core.config import settings
+from app.api.errors import handle_error
 from app.db.session import SessionLocal
 from app.repositories.user import UserRepository
 from app.schemas.user import User
+from app.usecases.errors import DomainException, ErrorDetail
+from app.usecases.login import GetLoginedUseCase
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
@@ -24,39 +24,25 @@ def get_session():
         session.close()
 
 
-def get_current_user(db: Session = Depends(get_session), token: str = Depends(oauth2_scheme)) -> User:
-    # TODO: エラーレスポンス周りは改善の余地あり
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail=ErrorDetail2.INVALID_CREDENTIALS,
-        headers={"WWW-Authenticate": "Bearer"},
-    )
+def get_current_user(session: Session = Depends(get_session), token: str = Depends(oauth2_scheme)) -> User:
+    user_repo = UserRepository(session)
+    usecase = GetLoginedUseCase(user_repo)
     try:
-        payload = jwt.decode(token, settings.SECRET_KEY,
-                             algorithms=[settings.ALGORITHM])
-        email: str = payload.get("sub")  # type: ignore
-        if email is None:
-            raise credentials_exception
-    except JWTError:
-        raise credentials_exception
-    user_repo = UserRepository(db)
-    user = user_repo.get_by_email(email=email)
-    if user is None:
-        raise credentials_exception
-    return user
+        user = usecase.do(token)
+    except Exception as e:
+        handle_error(e)
+        raise  # handle_errorで例外を処理した後にraiseすることで、Pylanceに例外をraiseしたことを知らせる。この処理は実行されない。
+    else:
+        return user
 
 
 def get_current_active_user(current_user: User = Depends(get_current_user)) -> User:
     if not current_user.active:
-        raise_http_exception(status.HTTP_400_BAD_REQUEST,
-                             ErrorDetail2.INACTIVE_USER)
+        handle_error(DomainException(ErrorDetail.INACTIVE_USER))
     return current_user
 
 
 def get_current_admin_user(current_user: User = Depends(get_current_active_user)) -> User:
     if not current_user.admin:
-        # raise_http_exception(status.HTTP_403_FORBIDDEN,
-        #                      ErrorDetail2.UNAUTHORIZED_OPERATION)
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
-                            detail="UNAUTHORIZED_OPERATION")
+        handle_error(DomainException(ErrorDetail.UNAUTHORIZED_OPERATION))
     return current_user
