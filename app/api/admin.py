@@ -16,14 +16,14 @@ router = APIRouter(
 
 
 @router.get("/users", response_model=list[User])
-def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+def get_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     user_repo = UserRepository(db)
     users = user_repo.get_all(skip=skip, limit=limit)
     return users
 
 
 @router.get("/users/{user_id}", response_model=User)
-def read_user(user_id: int, db: Session = Depends(get_db)):
+def get_user(user_id: int, db: Session = Depends(get_db)):
     user_repo = UserRepository(db)
     db_user = user_repo.get_by_id(user_id=user_id)
     if db_user is None:
@@ -49,7 +49,7 @@ def create_item_for_user(user_id: int, item: ItemCreate, db: Session = Depends(g
 
 
 @router.get("/items", response_model=list[Item])
-def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+def get_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     item_repo = ItemRepository(db)
     items = item_repo.get_all(skip=skip, limit=limit)
     return items

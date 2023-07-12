@@ -15,7 +15,7 @@ router = APIRouter(
 
 
 @router.get("", response_model=User)
-def read_users_me(current_user: User = Depends(get_current_active_user)):
+def get_me(current_user: User = Depends(get_current_active_user)):
     return current_user
 
 
@@ -30,12 +30,12 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
 
 
 @router.get("/items", response_model=list[Item])
-def read_own_items(db: Session = Depends(get_db), current_user: User = Depends(get_current_active_user)):
+def get_own_items(db: Session = Depends(get_db), current_user: User = Depends(get_current_active_user)):
     item_repo = ItemRepository(db)
     return item_repo.get_by_user_id(user_id=current_user.id)
 
 
 @router.post("/items", response_model=Item)
-def create_items(item: ItemCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_active_user)):
+def create_own_item(item: ItemCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_active_user)):
     item_repo = ItemRepository(db)
     return item_repo.create_for_user(item=item, user_id=current_user.id)
