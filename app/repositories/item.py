@@ -4,7 +4,7 @@ from app.models.item import DBItem as DBItem
 from app.schemas.item import ItemCreate
 
 
-class ItemRepo:
+class ItemRepository:
     def __init__(self, db: Session):
         self.db = db
 

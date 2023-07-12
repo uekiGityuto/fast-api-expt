@@ -5,7 +5,7 @@ from app.models.user import DBUser
 from app.schemas.user import UserCreate
 
 
-class UserRepo:
+class UserRepository:
     def __init__(self, db: Session):
         self.db = db
 

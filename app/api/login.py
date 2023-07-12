@@ -9,7 +9,7 @@ from app.api.errors import ErrorDetail, raise_http_exception
 from app.core.auth import create_access_token, verify_password
 from app.core.config import settings
 from app.models.user import DBUser
-from app.repositories.user import UserRepo
+from app.repositories.user import UserRepository
 from app.schemas.token import Token
 
 router = APIRouter(
@@ -19,7 +19,7 @@ router = APIRouter(
 
 
 def authenticate_user(db: Session, email: str, password: str) -> DBUser:
-    user_repo = UserRepo(db)
+    user_repo = UserRepository(db)
     user = user_repo.get_by_email(email=email)
     if user is None:
         raise_http_exception(status.HTTP_403_FORBIDDEN,
