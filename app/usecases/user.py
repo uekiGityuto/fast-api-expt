@@ -2,8 +2,8 @@ from app.models.item import DBItem
 from app.models.user import DBUser
 from app.repositories.item import ItemRepository
 from app.repositories.user import UserRepository
-from app.schemas.user import UserCreate
 from app.schemas.item import ItemCreate
+from app.schemas.user import UserCreate
 from app.usecases.errors import DomainException, ErrorDetail
 
 
@@ -14,7 +14,7 @@ class CreateUserUseCase:
     def do(self, user: UserCreate) -> DBUser:
         db_user = self.user_repo.get_by_email(user.email)
         if db_user:
-            DomainException(ErrorDetail.USER_ALREADY_EXISTS)
+            DomainException(ErrorDetail.ALREADY_EXISTS)
 
         return self.user_repo.create(user)
 
@@ -29,7 +29,7 @@ class TestTxUseCase:
         self.user_repo.create(user2)
 
 
-class GetItemUseCase:
+class GetItemsUseCase:
     def __init__(self, item_repo: ItemRepository):
         self.item_repo = item_repo
 

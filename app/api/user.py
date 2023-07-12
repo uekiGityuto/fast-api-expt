@@ -8,7 +8,7 @@ from app.repositories.user import UserRepository
 from app.schemas.item import Item, ItemCreate
 from app.schemas.user import User, UserCreate
 from app.usecases.user import (CreateItemUseCase, CreateUserUseCase,
-                               GetItemUseCase, TestTxUseCase)
+                               GetItemsUseCase, TestTxUseCase)
 
 router = APIRouter(
     prefix="/users",
@@ -50,7 +50,7 @@ def test(session: Session = Depends(get_session)):
 @router.get("/items", response_model=list[Item])
 def get_own_items(db: Session = Depends(get_session), current_user: User = Depends(get_current_active_user)):
     item_repo = ItemRepository(db)
-    usecase = GetItemUseCase(item_repo)
+    usecase = GetItemsUseCase(item_repo)
     try:
         items = usecase.do(current_user.id)
     except Exception as e:

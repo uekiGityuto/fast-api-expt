@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from sqlalchemy.orm import Session
 
-from app.api.errors import ErrorDetail, raise_http_exception
+from app.api.errors import ErrorDetail2, raise_http_exception
 from app.core.config import settings
 from app.db.session import SessionLocal
 from app.repositories.user import UserRepository
@@ -28,7 +28,7 @@ def get_current_user(db: Session = Depends(get_session), token: str = Depends(oa
     # TODO: エラーレスポンス周りは改善の余地あり
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail=ErrorDetail.INVALID_CREDENTIALS,
+        detail=ErrorDetail2.INVALID_CREDENTIALS,
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
@@ -49,12 +49,14 @@ def get_current_user(db: Session = Depends(get_session), token: str = Depends(oa
 def get_current_active_user(current_user: User = Depends(get_current_user)) -> User:
     if not current_user.active:
         raise_http_exception(status.HTTP_400_BAD_REQUEST,
-                             ErrorDetail.INACTIVE_USER)
+                             ErrorDetail2.INACTIVE_USER)
     return current_user
 
 
 def get_current_admin_user(current_user: User = Depends(get_current_active_user)) -> User:
     if not current_user.admin:
-        raise_http_exception(status.HTTP_403_FORBIDDEN,
-                             ErrorDetail.UNAUTHORIZED_OPERATION)
+        # raise_http_exception(status.HTTP_403_FORBIDDEN,
+        #                      ErrorDetail2.UNAUTHORIZED_OPERATION)
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
+                            detail="UNAUTHORIZED_OPERATION")
     return current_user

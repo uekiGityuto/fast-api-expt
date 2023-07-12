@@ -2,8 +2,8 @@ from enum import Enum
 
 
 class ErrorDetail(Enum):
-    USER_ALREADY_EXISTS = "USER_ALREADY_EXISTS"
-    USER_NOT_FOUND = "USER_NOT_FOUND"
+    ALREADY_EXISTS = "ALREADY_EXISTS"
+    NOT_FOUND = "NOT_FOUND"
 
 
 class DomainException(Exception):
