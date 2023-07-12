@@ -10,7 +10,7 @@ def handle_error(e: Exception):
             case ErrorDetail.NOT_FOUND:
                 status_code = status.HTTP_404_NOT_FOUND
                 headers = None
-            case ErrorDetail.LOGIN_FAILED, ErrorDetail.UNAUTHORIZED_OPERATION:
+            case ErrorDetail.LOGIN_FAILED | ErrorDetail.UNAUTHORIZED_OPERATION:
                 status_code = status.HTTP_403_FORBIDDEN
                 headers = None
             case ErrorDetail.INVALID_CREDENTIALS:
