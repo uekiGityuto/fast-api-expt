@@ -3,8 +3,8 @@ from sqlalchemy.orm import Session
 
 from app.api.dependencies import get_current_active_user, get_db
 from app.api.errors import ErrorDetail, raise_http_exception
-from app.repositories.item_repo import ItemRepo
-from app.repositories.user_repo import UserRepo
+from app.repositories.item import ItemRepo
+from app.repositories.user import UserRepo
 from app.schemas.item import Item, ItemCreate
 from app.schemas.user import User, UserCreate
 

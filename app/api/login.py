@@ -9,7 +9,7 @@ from app.api.errors import ErrorDetail, raise_http_exception
 from app.core.auth import create_access_token, verify_password
 from app.core.config import settings
 from app.models.user import DBUser
-from app.repositories.user_repo import UserRepo
+from app.repositories.user import UserRepo
 from app.schemas.token import Token
 
 router = APIRouter(

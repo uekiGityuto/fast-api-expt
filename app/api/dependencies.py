@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from app.api.errors import ErrorDetail, raise_http_exception
 from app.core.config import settings
 from app.db.session import SessionLocal
-from app.repositories.user_repo import UserRepo
+from app.repositories.user import UserRepo
 from app.schemas.user import User
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
