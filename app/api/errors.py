@@ -25,6 +25,8 @@ def handle_error(e: Exception):
         match e.detail:
             case ErrorDetail.NOT_FOUND:
                 status_code = status.HTTP_404_NOT_FOUND
+            case ErrorDetail.AUTHENTICATION_FAILED:
+                status_code = status.HTTP_403_FORBIDDEN
             case _:
                 status_code = status.HTTP_400_BAD_REQUEST
         raise HTTPException(
