@@ -19,6 +19,9 @@ docker tag fast-api-expt:latest 428485887053.dkr.ecr.ap-northeast-1.amazonaws.co
 docker push 428485887053.dkr.ecr.ap-northeast-1.amazonaws.com/stg-terraform-expt:latest
 ```
 
+なお、最後に確認した時点から大幅に変更しているので、現状のDockerfileでは適切に起動しない可能性が高い。
+また、Code Pipelineの中でDBマイグレーションをするようにすべきだが、それも書いていない。
+
 ## 補足
 
 ### シグナルハンドリング
