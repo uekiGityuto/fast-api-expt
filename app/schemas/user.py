@@ -1,9 +1,9 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from app.schemas.item import Item
 
 
 class UserBase(BaseModel):
-    email: str
+    email: EmailStr
     admin: bool = False
 
 

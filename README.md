@@ -24,12 +24,6 @@ docker push 428485887053.dkr.ecr.ap-northeast-1.amazonaws.com/stg-terraform-expt
 
 ## 補足
 
-### シグナルハンドリング
-Graceful Shutdownのためにシグナルハンドリングが必要だが、Uvicornのデフォルトでシグナルハンドリングしているらしい。  
-公式ドキュメントには書いてなさそうだったが、[Githubのソース](https://github.com/encode/uvicorn/blob/master/uvicorn/server.py)を読むと確かにそれらしき処理が書いてある。
-
-また、Shutdown処理の前に特別な処理が必要な場合は、Shutdownイベントのハンドリングができるので、それを利用する。（[参考](https://fastapi.tiangolo.com/advanced/events/)）
-
 ### アーキテクチャ
 ui層、usecase層、repository層が一方通行になるようなレイヤードアーキテクチャもどきで書いている。
 本当はオニオンアーキテクチャで書きたい。
@@ -38,6 +32,12 @@ FastAPIでオニオンアーキテクチャを採用しているサンプルコ�
 ### テスト
 本当はレイヤーごとに適切な単体テストを実施したいが、今回は省略した。  
 
+### シグナルハンドリング
+Graceful Shutdownのためにシグナルハンドリングが必要だが、Uvicornのデフォルトでシグナルハンドリングしているらしい。  
+公式ドキュメントには書いてなさそうだったが、[Githubのソース](https://github.com/encode/uvicorn/blob/master/uvicorn/server.py)を読むと確かにそれらしき処理が書いてある。
+
+また、Shutdown処理の前に特別な処理が必要な場合は、Shutdownイベントのハンドリングができるので、それを利用する。（[参考](https://fastapi.tiangolo.com/advanced/events/)）
+
 ## ロギング
 本当はエラーログとアクセスログを出したいが、今回は省略した。
 
@@ -45,3 +45,8 @@ FastAPIでオニオンアーキテクチャを採用しているサンプルコ�
 all-or-nothingの思想に基づき、エラーが起きた場合にロールバックするようにした。
 ただし、トランザクション管理のベストプラクティスが見つからなかったので、このリポジトリの実装が良い実装なのかはわからない。
 
+## バリデーション
+簡単なバリデーション（Emailなど）のみ実装した。
+
+## エラーハンドリング
+簡単なエラーハンドリングのみ実装した。
