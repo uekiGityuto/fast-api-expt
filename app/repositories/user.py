@@ -15,6 +15,9 @@ class UserRepository:
     def get_by_email(self, email: str) -> DBUser | None:
         return self.db.query(DBUser).filter(DBUser.email == email).first()
 
+    def get_by_email_with_lock(self, email: str) -> DBUser | None:
+        return self.db.query(DBUser).filter(DBUser.email == email).with_for_update().first()
+
     def get_all(self, skip: int = 0, limit: int = 100) -> list[DBUser]:
         return self.db.query(DBUser).offset(skip).limit(limit).all()
 
