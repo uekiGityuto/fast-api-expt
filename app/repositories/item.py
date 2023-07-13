@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from app.models.item import DBItem as DBItem
+from app.models.item import DBItem
 from app.schemas.item import ItemCreate
 
 
