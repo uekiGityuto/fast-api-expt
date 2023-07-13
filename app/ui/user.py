@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
-from app.api.dependencies import get_current_active_user, get_session
-from app.api.errors import handle_error
+from app.ui.dependencies import get_current_active_user, get_session
+from app.ui.errors import handle_error
 from app.repositories.item import ItemRepository
 from app.repositories.user import UserRepository
 from app.schemas.item import Item, ItemCreate

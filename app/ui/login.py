@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
-from app.api.dependencies import get_session
-from app.api.errors import handle_error
+from app.ui.dependencies import get_session
+from app.ui.errors import handle_error
 from app.repositories.user import UserRepository
 from app.schemas.token import Token
 from app.usecases.login import LoginUseCase

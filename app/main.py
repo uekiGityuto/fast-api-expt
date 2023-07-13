@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from app.api import admin, login, user
+from app.ui import admin, login, user
 
 app = FastAPI()
 

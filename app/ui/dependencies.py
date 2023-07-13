@@ -2,7 +2,7 @@ from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 
-from app.api.errors import handle_error
+from app.ui.errors import handle_error
 from app.db.session import SessionLocal
 from app.repositories.user import UserRepository
 from app.schemas.user import User
