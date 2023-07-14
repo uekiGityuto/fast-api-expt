@@ -22,7 +22,6 @@ def handle_error(e: Exception):
             case _:
                 status_code = status.HTTP_400_BAD_REQUEST
                 headers = None
-        logger.exception(e.detail.value, exc_info=e)
         raise HTTPException(
             status_code=status_code, detail=e.detail.value, headers=headers)
 

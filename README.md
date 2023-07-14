@@ -39,7 +39,9 @@ Graceful Shutdownのためにシグナルハンドリングが必要だが、Uvi
 また、Shutdown処理の前に特別な処理が必要な場合は、Shutdownイベントのハンドリングができるので、それを利用する。（[参考](https://fastapi.tiangolo.com/advanced/events/)）
 
 ### ロギング
-本当はエラーログとアクセスログを出したいが、今回は省略した。
+アクセスログとエラーログを出力している。  
+ただ、なぜかDIの中でロギングができない。（そういうもの？）  
+`app.ui.errors.handle_error`でエラー処理を共通化しているが、DIで注入した処理から`handle_error`を呼び出してもロギングされない。
 
 ### トランザクション
 all-or-nothingの思想に基づき、エラーが起きた場合にロールバックするようにした。  
