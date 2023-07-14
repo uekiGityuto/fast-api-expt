@@ -2,11 +2,11 @@ from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 
-from app.ui.errors import handle_error
 from app.db.session import SessionLocal
 from app.repositories.user import UserRepository
 from app.schemas.user import User
-from app.usecases.errors import DomainException, ErrorDetail
+from app.ui.errors import handle_error
+from app.usecases.errors import AuthException, DomainException, ErrorDetail
 from app.usecases.login import GetLoginedUseCase
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
@@ -44,5 +44,5 @@ def get_current_active_user(current_user: User = Depends(get_current_user)) -> U
 
 def get_current_admin_user(current_user: User = Depends(get_current_active_user)) -> User:
     if not current_user.admin:
-        handle_error(DomainException(ErrorDetail.UNAUTHORIZED_OPERATION))
+        handle_error(AuthException(ErrorDetail.UNAUTHORIZED_OPERATION))
     return current_user

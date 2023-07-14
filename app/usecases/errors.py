@@ -14,3 +14,8 @@ class ErrorDetail(Enum):
 class DomainException(Exception):
     def __init__(self, detail: ErrorDetail):
         self.detail = detail
+
+
+class AuthException(Exception):
+    def __init__(self, detail: ErrorDetail):
+        self.detail = detail

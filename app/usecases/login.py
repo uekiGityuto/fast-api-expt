@@ -7,7 +7,7 @@ from app.core.hash import verify_password
 from app.models.user import DBUser
 from app.repositories.user import UserRepository
 from app.schemas.user import User
-from app.usecases.errors import DomainException, ErrorDetail
+from app.usecases.errors import AuthException, ErrorDetail
 
 
 class LoginUseCase:
@@ -28,10 +28,10 @@ class LoginUseCase:
     def _authenticate_user(self, email: str, password: str) -> DBUser:
         user = self.user_repo.get_by_email(email)
         if user is None:
-            raise DomainException(ErrorDetail.LOGIN_FAILED)
+            raise AuthException(ErrorDetail.LOGIN_FAILED)
         assert user is not None
         if not verify_password(password, user.hashed_password):
-            raise DomainException(ErrorDetail.LOGIN_FAILED)
+            raise AuthException(ErrorDetail.LOGIN_FAILED)
         return user
 
     def do(self, username: str, password: str) -> str:
@@ -46,7 +46,7 @@ class GetLoginedUseCase:
         self.user_repo = user_repo
 
     def do(self, token: str) -> User:
-        e = DomainException(ErrorDetail.INVALID_CREDENTIALS)
+        e = AuthException(ErrorDetail.INVALID_CREDENTIALS)
         try:
             payload = jwt.decode(token, settings.SECRET_KEY,
                                  algorithms=[settings.ALGORITHM])
