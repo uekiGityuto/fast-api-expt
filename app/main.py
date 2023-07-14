@@ -1,10 +1,7 @@
 from fastapi import FastAPI
 
-from app.core.logging import setup_logger
 from app.ui import admin, login, user
 from app.ui.middleware import LoggerMiddleware
-
-logger = setup_logger()
 
 app = FastAPI()
 

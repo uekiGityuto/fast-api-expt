@@ -39,8 +39,9 @@ Graceful Shutdownのためにシグナルハンドリングが必要だが、Uvi
 また、Shutdown処理の前に特別な処理が必要な場合は、Shutdownイベントのハンドリングができるので、それを利用する。（[参考](https://fastapi.tiangolo.com/advanced/events/)）
 
 ### ロギング
-アクセスログとエラーログを出力している。  
-ただ、なぜかDIの中でロギングができない。（そういうもの？）  
+Uvicornのloggerを使ってみた。ただ、設定内容の情報が少ないので、お試し感覚。[参考](https://www.uvicorn.org/settings/#logging)
+
+また、アクセスログとエラーログを出力しているが、なぜかDIの中でロギングができない。（そういうもの？）  
 `app.ui.errors.handle_error`でエラー処理を共通化しているが、DIで注入した処理から`handle_error`を呼び出してもロギングされない。
 
 ### トランザクション

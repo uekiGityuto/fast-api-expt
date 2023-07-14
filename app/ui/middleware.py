@@ -6,7 +6,7 @@ from fastapi import Request, Response
 from starlette.middleware.base import (BaseHTTPMiddleware,
                                        RequestResponseEndpoint)
 
-logger = logging.getLogger()
+logger = logging.getLogger('uvicorn')
 
 
 def generate_request_id():

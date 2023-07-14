@@ -4,7 +4,7 @@ from fastapi import HTTPException, status
 
 from app.usecases.errors import DomainException, ErrorDetail
 
-logger = logging.getLogger()
+logger = logging.getLogger('uvicorn')
 
 
 def handle_error(e: Exception):

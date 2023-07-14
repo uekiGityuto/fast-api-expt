@@ -1,5 +1,4 @@
 import datetime
-import logging
 
 from pythonjsonlogger import jsonlogger
 
@@ -9,16 +8,3 @@ class CustomJsonFormatter(jsonlogger.JsonFormatter):
         super().add_fields(log_record, record, message_dict)
         log_record["timestamp"] = datetime.datetime.now().isoformat()
         log_record["level"] = record.levelname.lower()
-
-
-def setup_logger():
-    logger = logging.getLogger()
-
-    logHandler = logging.StreamHandler()
-    formatter = CustomJsonFormatter(
-        "%(timestamp)s %(level)s %(message)s")
-    logHandler.setFormatter(formatter)
-    logger.addHandler(logHandler)
-    logger.setLevel(logging.INFO)
-
-    return logger
