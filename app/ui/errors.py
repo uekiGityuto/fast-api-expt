@@ -1,10 +1,13 @@
+import logging
+
 from fastapi import HTTPException, status
 
 from app.usecases.errors import DomainException, ErrorDetail
 
+logger = logging.getLogger()
+
 
 def handle_error(e: Exception):
-    # TODO: ロギング
     if isinstance(e, DomainException):
         match e.detail:
             case ErrorDetail.NOT_FOUND:
@@ -19,7 +22,10 @@ def handle_error(e: Exception):
             case _:
                 status_code = status.HTTP_400_BAD_REQUEST
                 headers = None
+        logger.exception(e.detail.value, exc_info=e)
         raise HTTPException(
             status_code=status_code, detail=e.detail.value, headers=headers)
+
+    logger.exception(ErrorDetail.UNEXPECTED_ERROR.value, exc_info=e)
     raise HTTPException(
-        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='UNEXPECTED_ERROR')
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=ErrorDetail.UNEXPECTED_ERROR.value)
