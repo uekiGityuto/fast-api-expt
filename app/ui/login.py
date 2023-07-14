@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
@@ -15,13 +15,13 @@ router = APIRouter(
 
 
 @router.post("", response_model=Token)
-def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), session: Session = Depends(get_session)):
+def login_for_access_token(req: Request, form_data: OAuth2PasswordRequestForm = Depends(), session: Session = Depends(get_session)):
     user_repo = UserRepository(session)
     usecase = LoginUseCase(user_repo)
     try:
         access_token = usecase.do(
             username=form_data.username, password=form_data.password)
     except Exception as e:
-        handle_error(e)
+        handle_error(e, req)
     else:
         return {"access_token": access_token, "token_type": "bearer"}

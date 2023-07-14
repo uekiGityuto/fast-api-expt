@@ -1,13 +1,14 @@
 import logging
 
-from fastapi import HTTPException, status
+from fastapi import HTTPException, Request, status
 
 from app.usecases.errors import AuthException, DomainException, ErrorDetail
 
 logger = logging.getLogger('uvicorn')
 
 
-def handle_error(e: Exception):
+def handle_error(e: Exception, req: Request):
+    request_id = req.state.request_id if hasattr(req.state, "request_id") else None
     if isinstance(e, AuthException):
         match e.detail:
             case ErrorDetail.INVALID_CREDENTIALS:
@@ -16,7 +17,7 @@ def handle_error(e: Exception):
             case _:
                 status_code = status.HTTP_403_FORBIDDEN
                 headers = None
-        logger.warning(e.detail.value, exc_info=e)
+        logger.warning(e.detail.value, extra={'request_id': request_id})
         raise HTTPException(
             status_code=status_code, detail=e.detail.value, headers=headers)
 
@@ -31,6 +32,7 @@ def handle_error(e: Exception):
         raise HTTPException(
             status_code=status_code, detail=e.detail.value, headers=headers)
 
-    logger.exception(ErrorDetail.UNEXPECTED_ERROR.value, exc_info=e)
+    logger.exception(ErrorDetail.UNEXPECTED_ERROR.value,
+                     exc_info=e, extra={'request_id': request_id})
     raise HTTPException(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=ErrorDetail.UNEXPECTED_ERROR.value)

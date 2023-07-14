@@ -9,25 +9,21 @@ from starlette.middleware.base import (BaseHTTPMiddleware,
 logger = logging.getLogger('uvicorn')
 
 
-def generate_request_id():
-    return str(uuid.uuid4())
-
-
 class LoggerMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
-        request_id = generate_request_id()
+    async def dispatch(self, req: Request, call_next: RequestResponseEndpoint) -> Response:
         start_time = time.time()
-        request.state.request_id = request_id
+        request_id = str(uuid.uuid4())
+        req.state.request_id = request_id
 
-        response = await call_next(request)
+        response = await call_next(req)
 
         duration = time.time() - start_time
         log = {
             "request": {
                 "id": request_id,
-                "uri": request.url.path,
-                "headers": dict(request.headers),
-                "method": request.method,
+                "uri": req.url.path,
+                "headers": dict(req.headers),
+                "method": req.method,
             },
             "response": {
                 "status": response.status_code,
