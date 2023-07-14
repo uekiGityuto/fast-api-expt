@@ -1,16 +1,13 @@
 import datetime
 import logging
 
-import pytz
 from pythonjsonlogger import jsonlogger
 
 
 class CustomJsonFormatter(jsonlogger.JsonFormatter):
     def add_fields(self, log_record, record, message_dict):
         super().add_fields(log_record, record, message_dict)
-        jst_timezone = pytz.timezone("Asia/Tokyo")
-        log_record["timestamp"] = datetime.datetime.now(
-            jst_timezone).isoformat()
+        log_record["timestamp"] = datetime.datetime.now().isoformat()
         log_record["level"] = record.levelname.lower()
 
 
