@@ -2,7 +2,7 @@
 
 dev:
 	@echo "Starting development server..."
-	@uvicorn app.main:app --reload
+	@uvicorn app.main:app --reload --no-access-log
 pipfreeze:
 	@echo "Freezing pip dependencies..."
 	@pip freeze > requirements.txt
