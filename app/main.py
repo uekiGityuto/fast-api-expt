@@ -1,9 +1,11 @@
 from fastapi import FastAPI
 
-from app.ui import admin, login, user
+from app.ui import admin, health, login, user
 from app.ui.middleware import LoggerMiddleware
 
 app = FastAPI()
+
+app.include_router(health.router)
 
 app.add_middleware(LoggerMiddleware)
 

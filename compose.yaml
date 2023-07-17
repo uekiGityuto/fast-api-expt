@@ -1,0 +1,15 @@
+services:
+  fastapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    ports:
+      - 8000:80
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    env_file:
+      - .devcontainer/.env
+    environment:
+      PGHOST: host.docker.internal

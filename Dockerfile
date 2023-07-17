@@ -1,4 +1,4 @@
-FROM tiangolo/uvicorn-gunicorn-fastapi:python3.11
+FROM python:3.11
 
 WORKDIR /app
 
@@ -8,4 +8,4 @@ RUN pip install --disable-pip-version-check --no-cache-dir -r /tmp/pip-tmp/requi
 
 COPY ./app .
 
-ENV PYTHONPATH=/app
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80", "--log-config", "app/logging_config.json", "--no-access-log", "--no-use-colors"]
