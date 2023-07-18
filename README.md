@@ -22,6 +22,20 @@ docker push 428485887053.dkr.ecr.ap-northeast-1.amazonaws.com/stg-terraform-expt
 なお、最後に確認した時点から大幅に変更しているので、現状のDockerfileでは適切に起動しない可能性が高い。
 また、Code Pipelineの中でDBマイグレーションをするようにすべきだが、それも書いていない。
 
+## ローカル開発環境
+
+### 環境変数
+`.devcontainer/env.exapmle`を元に`.env`を作成する。
+
+SECRET_KEYには以下のコマンドの実行結果を設定する。
+```sh
+openssl rand -hex 32
+```
+
+### [VSCode Dev Container](https://code.visualstudio.com/docs/devcontainers/containers)の起動
+
+開始方法は[こちら](https://code.visualstudio.com/docs/devcontainers/containers#_getting-started)を参考にすること。
+
 ## 補足
 
 ### アーキテクチャ
