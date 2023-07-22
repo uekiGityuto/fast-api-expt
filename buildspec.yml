@@ -7,18 +7,18 @@ env:
     DOCKERHUB_PASS: arn:aws:secretsmanager:$AWS_DEFAULT_REGION:$AWS_ACCOUNT_ID:secret:stg/terraform-expt-build:password
 
 phases:
-  install:
-    commands:
-      - echo Installing alembic...
-      - pip install --disable-pip-version-check --no-cache-dir -r requirements.txt
+  # install:
+  #   commands:
+  #     - echo Installing alembic...
+  #     - pip install --disable-pip-version-check --no-cache-dir -r requirements.txt
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
       - aws --region $AWS_DEFAULT_REGION ecr get-login-password | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
       - echo Logging in to Docker Hub...
       # Docker Hubのダウンロード回数制限を回避するために認証する。
-      - echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin
-      - IMAGE_TAG=$CODEBUILD_RESOLVED_SOURCE_VERSION
+      # - echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin
+      # - IMAGE_TAG=$CODEBUILD_RESOLVED_SOURCE_VERSION
   build:
     commands:
       - echo Build started on `date`
