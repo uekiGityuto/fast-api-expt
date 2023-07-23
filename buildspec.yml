@@ -4,7 +4,7 @@ env:
   variables:
     DOCKERHUB_USER: "tie304628"
   parameter-store:
-    DOCKERHUB_PASS: "/stg/terraform-expt/code-pipeline/dockerhub_pass"
+    DOCKERHUB_PASS: "${BASE_PARAMETER_STORE_PATH}/code-pipeline/dockerhub_pass"
 
 phases:
   # install:
@@ -33,6 +33,7 @@ phases:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+      # - aws ssm put-parameter --name "${BASE_PARAMETER_STORE_PATH}/app/image_tag" --value "$IMAGE_TAG" --type String --overwrite
       - printf '[{"name":"app","imageUri":"%s"}]' $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG  > imagedefinitions.json
 
 artifacts:
