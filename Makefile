@@ -3,6 +3,7 @@
 dev:
 	@echo "Starting development server..."
 	@uvicorn app.main:app --reload --log-config app/logging_config.json --no-access-log --no-use-colors
+
 pipfreeze:
 	@echo "Freezing pip dependencies..."
 	@pip freeze > requirements.txt
