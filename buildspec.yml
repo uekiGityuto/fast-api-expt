@@ -1,10 +1,10 @@
 version: 0.2
 
 env:
-  # Secrets Managerは有料だから、 Parameter Storeでも良いと思う。
-  secrets-manager:
-    DOCKERHUB_USER: arn:aws:secretsmanager:$AWS_DEFAULT_REGION:$AWS_ACCOUNT_ID:secret:stg/terraform-expt-build:username
-    DOCKERHUB_PASS: arn:aws:secretsmanager:$AWS_DEFAULT_REGION:$AWS_ACCOUNT_ID:secret:stg/terraform-expt-build:password
+  variables:
+    DOCKERHUB_USER: "tie304628"
+  parameter-store:
+    DOCKERHUB_PASS: "/stg/terraform-expt/code-pipeline/dockerhub_pass"
 
 phases:
   # install:
@@ -25,7 +25,7 @@ phases:
       - echo Building the Docker image...
       - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
       - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
-      # TODO: ロールバック戦略を考慮
+      # DBマイグレーションをする場合はロールバック戦略を考慮する必要あり
       # - echo Running database migrations...
       # - alembic upgrade head
   post_build:
