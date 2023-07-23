@@ -4,7 +4,7 @@ env:
   variables:
     DOCKERHUB_USER: "tie304628"
   parameter-store:
-    DOCKERHUB_PASS: "${BASE_PARAMETER_STORE_PATH}/code-pipeline/dockerhub_pass"
+    DOCKERHUB_PASS: "${BASE_PARAMETER_STORE_PATH}/build/dockerhub_pass"
 
 phases:
   # install:
