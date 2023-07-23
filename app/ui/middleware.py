@@ -11,6 +11,9 @@ logger = logging.getLogger('uvicorn')
 
 class LoggerMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, req: Request, call_next: RequestResponseEndpoint) -> Response:
+        if req.url.path == "/health":
+            return await call_next(req)
+
         start_time = time.time()
         request_id = str(uuid.uuid4())
         req.state.request_id = request_id
