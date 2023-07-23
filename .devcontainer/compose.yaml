@@ -20,6 +20,9 @@ services:
 
     env_file:
       - .env
+    environment:
+      TZ: "Asia/Tokyo"
+
 
   db:
     image: postgres:15.3
@@ -30,6 +33,7 @@ services:
       POSTGRES_DB: ${PGDATABASE}
       POSTGRES_USER: ${PGUSER}
       POSTGRES_PASSWORD: ${PGPASSWORD}
+      TZ: "Asia/Tokyo"
     ports:
       - 65432:5432
     # Add "forwardPorts": ["5432"] to **devcontainer.json** to forward PostgreSQL locally.

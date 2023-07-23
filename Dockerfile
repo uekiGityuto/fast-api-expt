@@ -1,6 +1,7 @@
 FROM python:3.11
 
 WORKDIR /expt
+ENV TZ=Asia/Tokyo
 
 COPY requirements.txt /tmp/pip-tmp/
 RUN pip install --disable-pip-version-check --no-cache-dir -r /tmp/pip-tmp/requirements.txt \
