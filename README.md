@@ -74,6 +74,7 @@ Uvicornのloggerを使ってみた。ただ、設定内容の情報が少ない�
 
 ### セキュリティ
 多分色々抜けている。
+例えば、パスワードのハッシュはユーザーごとに異なるソルトを作成し、それをDBに保管して使うのが良い。[参考](https://qiita.com/ockeghem/items/d7324d383fb7c104af58)
 
 ### その他
 - 折角なのでPydantic v2にバージョンアップしたい(参考)[https://zenn.dev/tk_resilie/articles/fastapi0100_pydanticv2]
